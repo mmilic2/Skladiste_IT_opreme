@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 /**
@@ -31,8 +30,7 @@ public class Proizvod extends Entitet{
     @ManyToOne
     private Dobavljac dobavljac;
     
-    @ManyToMany
-    private List<Narudzba> narudzbe = new ArrayList<>();
+  
 
     public String getNaziv() {
         return naziv;
@@ -74,13 +72,7 @@ public class Proizvod extends Entitet{
         this.dobavljac = dobavljac;
     }
 
-    public List<Narudzba> getNarudzbe() {
-        return narudzbe;
-    }
-
-    public void setNarudzbe(List<Narudzba> narudzbe) {
-        this.narudzbe = narudzbe;
-    }
+    
     
     
     

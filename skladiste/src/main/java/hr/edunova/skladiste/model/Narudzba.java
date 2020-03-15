@@ -5,8 +5,11 @@
  */
 package hr.edunova.skladiste.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 /**
@@ -21,6 +24,9 @@ public class Narudzba extends Entitet{
     
     @ManyToOne
     private Zaposlenik zaposlenik;
+    
+    @ManyToMany
+    private List<Proizvod> proizvodi = new ArrayList<>();
 
     public Date getDatum() {
         return datum;
@@ -36,6 +42,14 @@ public class Narudzba extends Entitet{
 
     public void setZaposlenik(Zaposlenik zaposlenik) {
         this.zaposlenik = zaposlenik;
+    }
+
+    public List<Proizvod> getProizvodi() {
+        return proizvodi;
+    }
+
+    public void setProizvodi(List<Proizvod> proizvodi) {
+        this.proizvodi = proizvodi;
     }
     
     
