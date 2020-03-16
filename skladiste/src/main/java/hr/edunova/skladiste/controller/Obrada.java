@@ -33,5 +33,43 @@ public abstract class Obrada<T> {
         this.entitet=entitet;
     }
     
+    public T create() throws EdunovaException{
+        kontrolaCreate();
+        save();
+        nakonSpremanja();
+        return entitet;
+    }
     
+    public void createAll(List<T> lista) throws EdunovaException{
+        session.beginTransaction();
+        for(T sl: lista){
+            this.entitet=sl;
+            kontrolaCreate();
+            session.save(sl);
+            nakonSpremanja();
+        }
+        session.getTransaction().commit();
+    }
+    
+    public T update() throws EdunovaException{
+        kontrolaUpdate();
+        save();
+        nakonSpremanja();
+        return entitet;
+    }
+    
+    public boolean delete() throws EdunovaException{
+        kontrolaDelete();
+        session.beginTransaction();
+        session.delete(entitet);
+        session.getTransaction().commit();
+        return true;
+    }
+
+    private void save() {
+        session.beginTransaction();
+        session.save(entitet);
+        session.getTransaction().commit();
+        
+    }
 }

@@ -45,7 +45,6 @@
         
         
         <!-- Ovdje navodimo naše mapirane klase -->
-        <mapping class="hr.edunova.skladiste.model.Proizvodjac" />
         <mapping class="hr.edunova.skladiste.model.Dobavljac" />
         <mapping class="hr.edunova.skladiste.model.Zaposlenik" />
         <mapping class="hr.edunova.skladiste.model.Proizvod" />

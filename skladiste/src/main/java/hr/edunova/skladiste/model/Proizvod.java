@@ -17,15 +17,13 @@ import javax.persistence.ManyToOne;
  * @author marko
  */
 @Entity
-public class Proizvod extends Entitet{
+public class Proizvod extends Proizvodjac{
     
     
     private String naziv;
     private BigDecimal cijena;
     private Integer kolicina;
     
-    @ManyToOne
-    private Proizvodjac proizvodjac;
     
     @ManyToOne
     private Dobavljac dobavljac;
@@ -54,14 +52,6 @@ public class Proizvod extends Entitet{
 
     public void setKolicina(Integer kolicina) {
         this.kolicina = kolicina;
-    }
-
-    public Proizvodjac getProizvodjac() {
-        return proizvodjac;
-    }
-
-    public void setProizvodjac(Proizvodjac proizvodjac) {
-        this.proizvodjac = proizvodjac;
     }
 
     public Dobavljac getDobavljac() {

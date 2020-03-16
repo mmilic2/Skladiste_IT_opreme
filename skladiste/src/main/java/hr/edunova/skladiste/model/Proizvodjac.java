@@ -5,15 +5,15 @@
  */
 package hr.edunova.skladiste.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
+import javax.persistence.MappedSuperclass;
 
 /**
  *
  * @author marko
  */
-@Entity
-public class Proizvodjac extends Entitet{
+@MappedSuperclass
+public abstract class Proizvodjac extends Entitet{
     
     private String naziv;
     private String adresa;

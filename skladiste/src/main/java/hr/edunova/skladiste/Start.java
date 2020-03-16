@@ -5,7 +5,17 @@
  */
 package hr.edunova.skladiste;
 
+import hr.edunova.skladiste.controller.ObradaDobavljac;
+import hr.edunova.skladiste.controller.ObradaNarudzba;
+import hr.edunova.skladiste.controller.ObradaProizvod;
+import hr.edunova.skladiste.controller.ObradaZaposlenik;
+import hr.edunova.skladiste.model.Dobavljac;
+import hr.edunova.skladiste.model.Narudzba;
+import hr.edunova.skladiste.model.Proizvod;
+import hr.edunova.skladiste.model.Zaposlenik;
 import hr.edunova.skladiste.util.HibernateUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +24,21 @@ import hr.edunova.skladiste.util.HibernateUtil;
 public class Start {
     
     public Start(){
-        HibernateUtil.getSessionFactory().openSession();
+        List<Proizvod> lista = new ArrayList<>();
+        Proizvod p;
+        for(int i=0;i<100;i++){
+            p = new Proizvod();
+            p.setNaziv("Generirano " + i);
+            lista.add(p);
+        }
+        Narudzba n = new Narudzba();
+        n.setProizvodi(lista);
+        ObradaNarudzba za = new ObradaNarudzba();
+        
+        try {
+            za.create();
+        } catch (Exception e) {
+        }
     }
     
     public static void main(String[] args) {
