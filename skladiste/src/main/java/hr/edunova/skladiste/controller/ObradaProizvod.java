@@ -50,4 +50,8 @@ public class ObradaProizvod extends Obrada<Proizvod>{
         
     }
     
+    public void create(Proizvod p) throws EdunovaException{
+        super.entitet = p;
+        super.create();
+    }
 }

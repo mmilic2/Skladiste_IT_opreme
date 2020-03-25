@@ -13,9 +13,14 @@ import hr.edunova.skladiste.model.Dobavljac;
 import hr.edunova.skladiste.model.Narudzba;
 import hr.edunova.skladiste.model.Proizvod;
 import hr.edunova.skladiste.model.Zaposlenik;
+import hr.edunova.skladiste.util.EdunovaException;
 import hr.edunova.skladiste.util.HibernateUtil;
+import hr.edunova.skladiste.util.Pomocno;
+import hr.edunova.skladiste.view.SplashScreen;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,11 +29,22 @@ import java.util.List;
 public class Start {
     
     public Start(){
-        List<Proizvod> lista = new ArrayList<>();
+       
+        new SplashScreen().setVisible(true);
+        //Pomocno.pocetniInsert();
+        
+        
+        /*List<Proizvod> lista = new ArrayList<>();
         Proizvod p;
+        ObradaProizvod op = new ObradaProizvod();
         for(int i=0;i<100;i++){
             p = new Proizvod();
             p.setNaziv("Generirano " + i);
+            try {
+                op.create(p);
+            } catch (EdunovaException ex) {
+                Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
+            }
             lista.add(p);
         }
         Narudzba n = new Narudzba();
@@ -38,7 +54,9 @@ public class Start {
         try {
             za.create();
         } catch (Exception e) {
-        }
+        }*/
+        
+        
     }
     
     public static void main(String[] args) {

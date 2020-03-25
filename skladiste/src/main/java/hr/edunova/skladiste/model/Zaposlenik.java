@@ -18,7 +18,8 @@ public class Zaposlenik extends Entitet{
     private String prezime;
     private String kontakt;
     private String email;
-
+    private String lozinka;
+    
     public String getIme() {
         return ime;
     }
@@ -49,6 +50,14 @@ public class Zaposlenik extends Entitet{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getLozinka() {
+        return lozinka;
+    }
+
+    public void setLozinka(String lozinka) {
+        this.lozinka = lozinka;
     }
     
     
