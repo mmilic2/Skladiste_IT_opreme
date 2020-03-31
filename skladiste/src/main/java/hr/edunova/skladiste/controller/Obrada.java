@@ -32,6 +32,15 @@ public abstract class Obrada<T> {
         this();
         this.entitet=entitet;
     }
+
+    public T getEntitet() {
+        return entitet;
+    }
+
+    public void setEntitet(T entitet) {
+        this.entitet = entitet;
+    }
+    
     
     public T create() throws EdunovaException{
         kontrolaCreate();

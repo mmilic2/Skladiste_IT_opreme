@@ -30,6 +30,10 @@ public class Pomocno {
     
     public static Zaposlenik LOGIRAN;
     
+    public static String getNazivAplikacije(){
+        return "Skladiste";
+    }
+    
     public static void pocetniInsert() {
 
         Zaposlenik z = new Zaposlenik();

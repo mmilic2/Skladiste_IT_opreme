@@ -30,8 +30,9 @@ public class Start {
     
     public Start(){
        
-        new SplashScreen().setVisible(true);
         //Pomocno.pocetniInsert();
+        new SplashScreen().setVisible(true);
+        
         
         
         /*List<Proizvod> lista = new ArrayList<>();

@@ -59,6 +59,11 @@ public class Zaposlenik extends Entitet{
     public void setLozinka(String lozinka) {
         this.lozinka = lozinka;
     }
+
+    @Override
+    public String toString() {
+        return ime + " " + prezime;
+    }
     
     
     
