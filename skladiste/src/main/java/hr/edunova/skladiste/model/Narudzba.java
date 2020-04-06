@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -21,12 +22,13 @@ import javax.persistence.ManyToOne;
 public class Narudzba extends Entitet{
     
     private Date datum;
+    private Integer sifra;
     
     @ManyToOne
     private Zaposlenik zaposlenik;
     
-    @ManyToMany
-    private List<Proizvod> proizvodi = new ArrayList<>();
+    @OneToMany(mappedBy = "narudzba")
+    private List<ProizvodNarudzba> stavke;
 
     public Date getDatum() {
         return datum;
@@ -44,13 +46,22 @@ public class Narudzba extends Entitet{
         this.zaposlenik = zaposlenik;
     }
 
-    public List<Proizvod> getProizvodi() {
-        return proizvodi;
+    public List<ProizvodNarudzba> getStavke() {
+        return stavke;
     }
 
-    public void setProizvodi(List<Proizvod> proizvodi) {
-        this.proizvodi = proizvodi;
+    public void setStavke(List<ProizvodNarudzba> stavke) {
+        this.stavke = stavke;
     }
+
+    public Integer getSifra() {
+        return sifra;
+    }
+
+    public void setSifra(Integer sifra) {
+        this.sifra = sifra;
+    }
+
     
     
     

@@ -49,6 +49,7 @@
         <mapping class="hr.edunova.skladiste.model.Zaposlenik" />
         <mapping class="hr.edunova.skladiste.model.Proizvod" />
         <mapping class="hr.edunova.skladiste.model.Narudzba" />
+        <mapping class="hr.edunova.skladiste.model.ProizvodNarudzba" />
         
         
         

@@ -86,7 +86,6 @@ public class Pomocno {
         lista.add(p);
         
         Narudzba n = new Narudzba();
-        n.setProizvodi(lista);
         n.setDatum(new Date());
         n.setZaposlenik(z);
         
