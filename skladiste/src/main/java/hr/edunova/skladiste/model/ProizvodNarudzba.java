@@ -5,6 +5,7 @@
  */
 package hr.edunova.skladiste.model;
 
+import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -16,7 +17,7 @@ import javax.persistence.ManyToOne;
 public class ProizvodNarudzba extends Entitet{
     
     private Integer kolicina;
-    private Integer cijena;
+    private BigDecimal cijena;
     
     @ManyToOne
     private Narudzba narudzba;
@@ -32,11 +33,11 @@ public class ProizvodNarudzba extends Entitet{
         this.kolicina = kolicina;
     }
 
-    public Integer getCijena() {
+    public BigDecimal getCijena() {
         return cijena;
     }
 
-    public void setCijena(Integer cijena) {
+    public void setCijena(BigDecimal cijena) {
         this.cijena = cijena;
     }
 
@@ -55,6 +56,9 @@ public class ProizvodNarudzba extends Entitet{
     public void setProizvod(Proizvod proizvod) {
         this.proizvod = proizvod;
     }
+
+    
+
     
     
     

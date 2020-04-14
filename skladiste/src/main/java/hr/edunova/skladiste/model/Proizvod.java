@@ -27,8 +27,6 @@ public class Proizvod extends Proizvodjac{
     
     @ManyToOne
     private Dobavljac dobavljac;
-    
-  
 
     public String getNaziv() {
         return naziv;
@@ -62,8 +60,11 @@ public class Proizvod extends Proizvodjac{
         this.dobavljac = dobavljac;
     }
 
+    @Override
+    public String toString() {
+        return naziv;
+    }
     
-    
-    
+  
     
 }

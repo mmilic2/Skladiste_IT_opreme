@@ -45,6 +45,13 @@ public class ObradaProizvod extends Obrada<Proizvod>{
         return session.createQuery("from Proizvod").list();
     }
 
+    public List<Proizvod> getPodaci(String uvjet){
+        return session.createQuery("from Proizvod p "
+                + " where p.naziv like :uvjet ")
+                .setParameter("uvjet", "%" + uvjet + "%")
+                .setMaxResults(20).list();
+    }
+    
     @Override
     protected void nakonSpremanja() {
         

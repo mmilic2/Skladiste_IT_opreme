@@ -28,7 +28,7 @@ public class Narudzba extends Entitet{
     private Zaposlenik zaposlenik;
     
     @OneToMany(mappedBy = "narudzba")
-    private List<ProizvodNarudzba> stavke;
+    private List<ProizvodNarudzba> stavke = new ArrayList<>();
 
     public Date getDatum() {
         return datum;
@@ -36,6 +36,14 @@ public class Narudzba extends Entitet{
 
     public void setDatum(Date datum) {
         this.datum = datum;
+    }
+
+    public Integer getSifra() {
+        return sifra;
+    }
+
+    public void setSifra(Integer sifra) {
+        this.sifra = sifra;
     }
 
     public Zaposlenik getZaposlenik() {
@@ -52,14 +60,6 @@ public class Narudzba extends Entitet{
 
     public void setStavke(List<ProizvodNarudzba> stavke) {
         this.stavke = stavke;
-    }
-
-    public Integer getSifra() {
-        return sifra;
-    }
-
-    public void setSifra(Integer sifra) {
-        this.sifra = sifra;
     }
 
     

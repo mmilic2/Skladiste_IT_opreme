@@ -12,11 +12,15 @@ import hr.edunova.skladiste.controller.ObradaZaposlenik;
 import hr.edunova.skladiste.model.Dobavljac;
 import hr.edunova.skladiste.model.Narudzba;
 import hr.edunova.skladiste.model.Proizvod;
+import hr.edunova.skladiste.model.ProizvodNarudzba;
 import hr.edunova.skladiste.model.Zaposlenik;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
@@ -29,9 +33,47 @@ public class Pomocno {
 
     
     public static Zaposlenik LOGIRAN;
+    private final static DecimalFormat df = df();
+    
     
     public static String getNazivAplikacije(){
         return "Skladiste";
+    }
+    
+    public static String getFormatCijelogBroja(long i){
+        //https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
+        DecimalFormat dfCijeliBroj = new DecimalFormat("#");
+        return dfCijeliBroj.format(i);
+    }
+    
+    public static int getCijeliBrojIzStringa(String s){
+         try {
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    public static String getFormatDecimalniBroj(BigDecimal b){
+       
+        return df.format(b);
+    }
+    
+    public static BigDecimal getDecimalniBrojIzStringa(String s){
+        try {
+            return new BigDecimal(df.parse(s).doubleValue());
+        } catch (Exception e) {
+            return BigDecimal.ZERO;
+        }
+           
+    }
+    
+    private static DecimalFormat df(){
+        NumberFormat nf = NumberFormat.
+                getNumberInstance(new Locale("hr","HR"));
+         DecimalFormat dfl = (DecimalFormat) nf;
+         dfl.applyPattern("#,###.00");
+    return dfl;
     }
     
     public static void pocetniInsert() {
@@ -66,7 +108,7 @@ public class Pomocno {
         } catch (EdunovaException ex) {
             Logger.getLogger(Pomocno.class.getName()).log(Level.SEVERE, null, ex);
         }
-        List<Proizvod> lista = new ArrayList<>();
+        
         Proizvod p = new Proizvod();
         p.setAdresa("Negdje u Americi");
         p.setDobavljac(d);
@@ -83,11 +125,21 @@ public class Pomocno {
         } catch (EdunovaException ex) {
             Logger.getLogger(Pomocno.class.getName()).log(Level.SEVERE, null, ex);
         }
-        lista.add(p);
+        
         
         Narudzba n = new Narudzba();
         n.setDatum(new Date());
         n.setZaposlenik(z);
+        n.setSifra(1);
+        
+        
+        ProizvodNarudzba pn = new ProizvodNarudzba();
+        pn.setNarudzba(n);
+        pn.setProizvod(p);
+        pn.setCijena(new BigDecimal(2000.20));
+        pn.setKolicina(2);
+        
+        n.getStavke().add(pn);
         
         ObradaNarudzba obradaNarudzba = new ObradaNarudzba(n);
         
@@ -96,6 +148,7 @@ public class Pomocno {
         } catch (EdunovaException ex) {
             Logger.getLogger(Pomocno.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         
         
     }

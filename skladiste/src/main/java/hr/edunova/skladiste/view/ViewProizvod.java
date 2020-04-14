@@ -5,19 +5,72 @@
  */
 package hr.edunova.skladiste.view;
 
+import hr.edunova.skladiste.controller.ObradaDobavljac;
+import hr.edunova.skladiste.controller.ObradaProizvod;
+import hr.edunova.skladiste.model.Dobavljac;
+import hr.edunova.skladiste.model.Proizvod;
+import hr.edunova.skladiste.util.EdunovaException;
+import hr.edunova.skladiste.util.Pomocno;
+import java.awt.event.KeyEvent;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author marko
  */
 public class ViewProizvod extends javax.swing.JFrame {
 
+    
+    private final ObradaProizvod obrada;
     /**
      * Creates new form ViewProizvod
      */
     public ViewProizvod() {
         initComponents();
+        obrada = new ObradaProizvod();
+        ucitajDobavljac();
+        ucitaj();
     }
-
+    
+    private void ucitajVrijednosti() {
+        obrada.getEntitet().setNaziv(txtNaziv.getText());
+        obrada.getEntitet().setCijena(Pomocno.getDecimalniBrojIzStringa(txtCijena.getText()));
+        obrada.getEntitet().setKolicina(Pomocno.getCijeliBrojIzStringa(txtKolicina.getText()));
+        obrada.getEntitet().setDobavljac(cmbDobavljac.getModel().getElementAt(cmbDobavljac.getSelectedIndex()));
+    }
+    
+    private void ucitaj() {
+        DefaultListModel<Proizvod> m = new DefaultListModel<>();
+        obrada.getPodaci(txtUvjet.getText().trim()).forEach(s -> m.addElement(s));
+        lstPodaci.setModel(m);
+    }
+    
+    private void postaviVrijednosti() {
+        txtNaziv.setText(obrada.getEntitet().getNaziv());
+        txtCijena.setText(Pomocno.getFormatDecimalniBroj(obrada.getEntitet().getCijena()));
+        txtKolicina.setText(Pomocno.getFormatCijelogBroja(obrada.getEntitet().getKolicina()));
+        postaviDobavljac();
+    }
+    
+    private void ucitajDobavljac(){
+        DefaultComboBoxModel<Dobavljac> m = new DefaultComboBoxModel<>();
+        new ObradaDobavljac().getPodaci().forEach(s->m.addElement(s));
+        cmbDobavljac.setModel(m);
+    }
+    
+    private void postaviDobavljac(){
+        ComboBoxModel<Dobavljac> m = cmbDobavljac.getModel();
+        for(int i=0;i<m.getSize();i++){
+            if(m.getElementAt(i).getId().equals(obrada.getEntitet().getDobavljac().getId())){
+                cmbDobavljac.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,23 +80,220 @@ public class ViewProizvod extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstPodaci = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        txtNaziv = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtCijena = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtKolicina = new javax.swing.JTextField();
+        cmbDobavljac = new javax.swing.JComboBox<>();
+        btnPromjeni = new javax.swing.JButton();
+        btnDodaj = new javax.swing.JButton();
+        btnObrisi = new javax.swing.JButton();
+        txtUvjet = new javax.swing.JTextField();
+        btnTrazi = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lstPodaci.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstPodaciValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(lstPodaci);
+
+        jLabel1.setText("Naziv");
+
+        jLabel2.setText("CIjena");
+
+        jLabel3.setText("Količina");
+
+        cmbDobavljac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbDobavljacActionPerformed(evt);
+            }
+        });
+
+        btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
+
+        btnDodaj.setText("Dodaj");
+        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDodajActionPerformed(evt);
+            }
+        });
+
+        btnObrisi.setText("Obriši");
+        btnObrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObrisiActionPerformed(evt);
+            }
+        });
+
+        txtUvjet.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUvjetKeyPressed(evt);
+            }
+        });
+
+        btnTrazi.setText("Traži");
+        btnTrazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTraziActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                    .addComponent(txtUvjet))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPromjeni, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNaziv)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCijena)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtKolicina)
+                            .addComponent(cmbDobavljac, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnTrazi, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtUvjet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTrazi))
+                .addGap(17, 17, 17)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNaziv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCijena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtKolicina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(cmbDobavljac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPromjeni)
+                    .addComponent(btnDodaj)
+                    .addComponent(btnObrisi))
+                .addContainerGap(64, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbDobavljacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDobavljacActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbDobavljacActionPerformed
+
+    private void lstPodaciValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstPodaciValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
+        obrada.setEntitet(lstPodaci.getSelectedValue());
+        if (obrada.getEntitet() == null) {
+            return;
+        }
+        postaviVrijednosti();
+     
+    }//GEN-LAST:event_lstPodaciValueChanged
+
+    private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
+        try {
+            obrada.setEntitet(new Proizvod());
+            ucitajVrijednosti();
+            obrada.create();
+            ucitaj();
+        } catch (EdunovaException ex) {
+            JOptionPane.showMessageDialog(null, ex.getPoruka());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+        if (obrada.getEntitet() == null) {
+            JOptionPane.showMessageDialog(null, "Prvo odaberite stavku");
+            return;
+        }
+
+        ucitajVrijednosti();
+        try {
+            obrada.update();
+            ucitaj();
+        } catch (EdunovaException e) {
+            JOptionPane.showMessageDialog(null, e.getPoruka());
+        }
+    }//GEN-LAST:event_btnPromjeniActionPerformed
+
+    private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
+        if (obrada.getEntitet() == null) {
+            JOptionPane.showMessageDialog(null, "Prvo odaberite stavku");
+            return;
+        }
+        try {
+            obrada.delete();
+            ucitaj();
+        } catch (EdunovaException e) {
+            JOptionPane.showMessageDialog(null, e.getPoruka());
+        }
+    }//GEN-LAST:event_btnObrisiActionPerformed
+
+    private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
+        ucitaj();
+    }//GEN-LAST:event_btnTraziActionPerformed
+
+    private void txtUvjetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUvjetKeyPressed
+        
+    }//GEN-LAST:event_txtUvjetKeyPressed
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDodaj;
+    private javax.swing.JButton btnObrisi;
+    private javax.swing.JButton btnPromjeni;
+    private javax.swing.JButton btnTrazi;
+    private javax.swing.JComboBox<Dobavljac> cmbDobavljac;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<Proizvod> lstPodaci;
+    private javax.swing.JTextField txtCijena;
+    private javax.swing.JTextField txtKolicina;
+    private javax.swing.JTextField txtNaziv;
+    private javax.swing.JTextField txtUvjet;
     // End of variables declaration//GEN-END:variables
 }
