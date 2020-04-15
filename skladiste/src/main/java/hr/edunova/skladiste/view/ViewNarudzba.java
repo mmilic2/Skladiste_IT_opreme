@@ -6,11 +6,18 @@
 package hr.edunova.skladiste.view;
 
 import hr.edunova.skladiste.controller.ObradaNarudzba;
+import hr.edunova.skladiste.controller.ObradaProizvod;
 import hr.edunova.skladiste.controller.ObradaZaposlenik;
 import hr.edunova.skladiste.model.Narudzba;
+import hr.edunova.skladiste.model.Proizvod;
+import hr.edunova.skladiste.model.ProizvodNarudzba;
 import hr.edunova.skladiste.model.Zaposlenik;
+import hr.edunova.skladiste.util.EdunovaException;
+import java.awt.event.KeyEvent;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,7 +25,8 @@ import javax.swing.DefaultListModel;
  */
 public class ViewNarudzba extends javax.swing.JFrame {
 
-    public final ObradaNarudzba obrada;
+    private final ObradaNarudzba obrada;
+    private final ObradaProizvod obradaProizvod;
     
     /**
      * Creates new form ViewNarudzba
@@ -26,8 +34,10 @@ public class ViewNarudzba extends javax.swing.JFrame {
     public ViewNarudzba() {
         initComponents();
         obrada = new ObradaNarudzba();
+        obradaProizvod = new ObradaProizvod();
         ucitajZaposlenike();
         ucitaj();
+        obrada.setEntitet(new Narudzba());
     }
 
     private void ucitajZaposlenike(){
@@ -42,6 +52,41 @@ public class ViewNarudzba extends javax.swing.JFrame {
         lstPodaci.setModel(g);
     }
     
+    private void ucitajVrijednosti() {
+        obrada.getEntitet().setDatum(new Date());
+        obrada.getEntitet().setZaposlenik(cmbZaposlenik.getModel().getElementAt(cmbZaposlenik.getSelectedIndex()));
+        obrada.getEntitet().setZaposlenik(cmbZaposlenik.getModel().getElementAt(cmbZaposlenik.getSelectedIndex()));
+        try {
+            DefaultListModel<ProizvodNarudzba> m = (DefaultListModel<ProizvodNarudzba>)lstProizvodiUNarudzbi.getModel();
+            obrada.ocistiProizvodeUNarudzbi();
+            for(int i=0;i<m.getSize();i++){
+                obrada.getEntitet().getStavke().add(m.get(i));
+            }
+        } catch (Exception e) {
+        }
+        
+    }
+    
+    private void postaviVrijednosti(){
+        txtDatum.setText(obrada.getEntitet().getDatum().toString());
+        postaviZaposlenike();
+        postaviProizvode();
+    }
+    
+    private void postaviZaposlenike(){
+        for(int i=0;i<cmbZaposlenik.getModel().getSize();i++){
+            if(cmbZaposlenik.getModel().getElementAt(i).getId().equals(obrada.getEntitet().getZaposlenik().getId())){
+                cmbZaposlenik.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    
+    private void postaviProizvode(){
+        DefaultListModel<ProizvodNarudzba> m = new DefaultListModel<>();
+        obrada.getEntitet().getStavke().forEach(c->{m.addElement(c);});
+        lstProizvodiUNarudzbi.setModel(m);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,23 +99,84 @@ public class ViewNarudzba extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstPodaci = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
-        txtDatun = new javax.swing.JTextField();
+        txtDatum = new javax.swing.JTextField();
         cmbZaposlenik = new javax.swing.JComboBox<>();
         btnDodaj = new javax.swing.JButton();
         btnPromjeni = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lstProizvodiUNarudzbi = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lstProizvodi = new javax.swing.JList<>();
+        btnTrazi = new javax.swing.JButton();
+        txtUvjet = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        lstPodaci.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstPodaciValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(lstPodaci);
 
         jLabel1.setText("Datum");
 
         btnDodaj.setText("Dodaj");
+        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDodajActionPerformed(evt);
+            }
+        });
 
         btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
 
         btnObrisi.setText("Obrisi");
+        btnObrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObrisiActionPerformed(evt);
+            }
+        });
+
+        lstProizvodiUNarudzbi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstProizvodiUNarudzbiMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(lstProizvodiUNarudzbi);
+
+        jLabel2.setText("Proizvodi u narudzbi");
+
+        lstProizvodi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstProizvodiMouseClicked(evt);
+            }
+        });
+        lstProizvodi.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstProizvodiValueChanged(evt);
+            }
+        });
+        jScrollPane3.setViewportView(lstProizvodi);
+
+        btnTrazi.setText("Traži");
+        btnTrazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTraziActionPerformed(evt);
+            }
+        });
+
+        txtUvjet.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUvjetKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,54 +184,203 @@ public class ViewNarudzba extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDatun)
-                            .addComponent(cmbZaposlenik, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnPromjeni, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnPromjeni)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(cmbZaposlenik, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtDatum, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtUvjet, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnTrazi, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtUvjet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnTrazi))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDatun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmbZaposlenik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDodaj)
-                    .addComponent(btnPromjeni)
-                    .addComponent(btnObrisi))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbZaposlenik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDodaj)
+                            .addComponent(btnPromjeni)
+                            .addComponent(btnObrisi))
+                        .addContainerGap(104, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane3)))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
+        ucitajProizvode();
+    }//GEN-LAST:event_btnTraziActionPerformed
+
+    private void txtUvjetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUvjetKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            ucitajProizvode();
+        }
+    }//GEN-LAST:event_txtUvjetKeyPressed
+
+    private void lstPodaciValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstPodaciValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
+        obrada.setEntitet(lstPodaci.getSelectedValue());
+        if (obrada.getEntitet() == null) {
+            return;
+        }
+        postaviVrijednosti();
+    }//GEN-LAST:event_lstPodaciValueChanged
+
+    private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
+        try {
+            
+            ucitajVrijednosti();
+            obrada.create();
+            ucitaj();
+        } catch (EdunovaException ex) {
+            JOptionPane.showMessageDialog(null, ex.getPoruka());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+        if (obrada.getEntitet() == null) {
+            JOptionPane.showMessageDialog(null, "Prvo odaberite stavku");
+            return;
+        }
+        
+        ucitajVrijednosti();
+        try {
+            obrada.update();
+            ucitaj();
+        } catch (EdunovaException e) {
+            JOptionPane.showMessageDialog(null, e.getPoruka());
+        }
+    }//GEN-LAST:event_btnPromjeniActionPerformed
+
+    private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
+        if (obrada.getEntitet() == null) {
+            JOptionPane.showMessageDialog(null, "Prvo odaberite stavku");
+            return;
+        }
+        try {
+            obrada.delete();
+            ucitaj();
+        } catch (EdunovaException e) {
+            JOptionPane.showMessageDialog(null, e.getPoruka());
+        }
+    }//GEN-LAST:event_btnObrisiActionPerformed
+
+    private void lstProizvodiValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstProizvodiValueChanged
+        
+    }//GEN-LAST:event_lstProizvodiValueChanged
+
+    private void lstProizvodiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstProizvodiMouseClicked
+        if (evt.getClickCount() == 2) {
+            int index = lstProizvodi.locationToIndex(evt.getPoint());
+            Proizvod p = lstProizvodi.getModel().getElementAt(index);
+            
+            try {
+                DefaultListModel<ProizvodNarudzba> m = (DefaultListModel<ProizvodNarudzba>) lstProizvodiUNarudzbi.getModel();
+              for(int i=0;i<m.getSize();i++){
+                  if(m.get(i).getProizvod().getId().equals(p.getId())){
+                      return;
+                  }
+              } 
+            } catch (Exception e) {
+            }
+             
+            
+    
+            
+            ProizvodNarudzba pn = new ProizvodNarudzba();
+            pn.setProizvod(p);
+            pn.setNarudzba(obrada.getEntitet());
+            pn.setCijena(obradaProizvod.cijenaNakonPdva(obradaProizvod.getEntitet().getCijena()));
+            DefaultListModel<ProizvodNarudzba> m;
+            
+            try {
+                m = (DefaultListModel<ProizvodNarudzba>) lstProizvodiUNarudzbi.getModel();
+            } catch (Exception e) {
+                m = new DefaultListModel<>();
+                lstProizvodiUNarudzbi.setModel(m);
+            }
+            
+            m.addElement(pn);
+            lstProizvodiUNarudzbi.repaint();
+            
+        }
+    }//GEN-LAST:event_lstProizvodiMouseClicked
+
+    private void lstProizvodiUNarudzbiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstProizvodiUNarudzbiMouseClicked
+        if(evt.getClickCount() == 2) {
+            int index = lstProizvodiUNarudzbi.locationToIndex(evt.getPoint());
+            
+            DefaultListModel<ProizvodNarudzba> m = (DefaultListModel<ProizvodNarudzba>) lstProizvodiUNarudzbi.getModel();
+            m.remove(index);
+            
+            lstProizvodiUNarudzbi.repaint();
+            
+        }
+    }//GEN-LAST:event_lstProizvodiUNarudzbiMouseClicked
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDodaj;
     private javax.swing.JButton btnObrisi;
     private javax.swing.JButton btnPromjeni;
+    private javax.swing.JButton btnTrazi;
     private javax.swing.JComboBox<Zaposlenik> cmbZaposlenik;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<Narudzba> lstPodaci;
-    private javax.swing.JTextField txtDatun;
+    private javax.swing.JList<Proizvod> lstProizvodi;
+    private javax.swing.JList<ProizvodNarudzba> lstProizvodiUNarudzbi;
+    private javax.swing.JTextField txtDatum;
+    private javax.swing.JTextField txtUvjet;
     // End of variables declaration//GEN-END:variables
+
+    
+    private void ucitajProizvode(){
+        DefaultListModel<Proizvod> m = new DefaultListModel<>();
+        obradaProizvod.getPodaci(txtUvjet.getText().trim()).forEach(s -> m.addElement(s));
+        lstProizvodi.setModel(m);
+    }
+
 }

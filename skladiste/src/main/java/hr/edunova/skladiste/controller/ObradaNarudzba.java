@@ -7,6 +7,7 @@ package hr.edunova.skladiste.controller;
 
 import hr.edunova.skladiste.model.Narudzba;
 import hr.edunova.skladiste.util.EdunovaException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,15 @@ public class ObradaNarudzba extends Obrada<Narudzba>{
         super(entitet);
     }
     
+    
+    public void ocistiProizvodeUNarudzbi(){
+        session.beginTransaction();
+        entitet.getStavke().forEach((c)->{
+            session.delete(c);
+        });
+         session.getTransaction().commit();
+        entitet.setStavke(new ArrayList<>());
+    }
     
     @Override
     protected void kontrolaCreate() throws EdunovaException {

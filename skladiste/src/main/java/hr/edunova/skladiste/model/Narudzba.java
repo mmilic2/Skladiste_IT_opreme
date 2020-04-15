@@ -62,6 +62,11 @@ public class Narudzba extends Entitet{
         this.stavke = stavke;
     }
 
+    @Override
+    public String toString() {
+        return sifra.toString();
+    }
+
     
     
     

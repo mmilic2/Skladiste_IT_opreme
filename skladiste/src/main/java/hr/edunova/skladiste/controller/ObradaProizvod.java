@@ -7,6 +7,7 @@ package hr.edunova.skladiste.controller;
 
 import hr.edunova.skladiste.model.Proizvod;
 import hr.edunova.skladiste.util.EdunovaException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -60,5 +61,15 @@ public class ObradaProizvod extends Obrada<Proizvod>{
     public void create(Proizvod p) throws EdunovaException{
         super.entitet = p;
         super.create();
+    }
+    
+    public BigDecimal cijenaNakonPdva(BigDecimal p){
+        BigDecimal pdv = new BigDecimal("0.25");
+        BigDecimal dodatak = new BigDecimal("0.10");
+        BigDecimal pdvDio = p.multiply(pdv);
+        BigDecimal dodatakNaCijenu = p.multiply(dodatak);
+        BigDecimal ukupno = p.add(pdvDio).add(dodatakNaCijenu);
+        return ukupno;
+        
     }
 }
