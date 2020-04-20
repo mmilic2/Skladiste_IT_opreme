@@ -9,6 +9,7 @@ import hr.edunova.skladiste.model.Narudzba;
 import hr.edunova.skladiste.util.EdunovaException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -77,5 +78,14 @@ public class ObradaNarudzba extends Obrada<Narudzba>{
     
     public Integer Sifra(){
         return (Integer)session.createQuery("SELECT n.sifra FROM Narudzba n ORDER BY n.sifra DESC").setMaxResults(1).uniqueResult()+1; 
+    }
+    
+    public Boolean isInt(String provjera){
+        try {
+            Integer.parseInt(provjera);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

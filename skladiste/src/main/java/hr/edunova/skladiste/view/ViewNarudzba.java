@@ -59,7 +59,12 @@ public class ViewNarudzba extends javax.swing.JFrame {
     }
     
     private void ucitajVrijednosti() {
-        obrada.getEntitet().setSifra(Integer.parseInt(txtSifra.getText()));
+        if(obrada.isInt(txtSifra.getText())){
+            obrada.getEntitet().setSifra(Integer.parseInt(txtSifra.getText()));
+        }else{
+            JOptionPane.showMessageDialog(null, "Sifra mora biti broj");
+            return;
+        }
         obrada.getEntitet().setZaposlenik(cmbZaposlenik.getModel().getElementAt(cmbZaposlenik.getSelectedIndex()));
         if(dpDatum.getDate()!=null){
             Date d = Pomocno.convertToDateViaInstant(dpDatum.getDate());
@@ -308,7 +313,7 @@ public class ViewNarudzba extends javax.swing.JFrame {
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
         try {
-            
+            obrada.setEntitet(new Narudzba());
             ucitajVrijednosti();
             obrada.create();
             ucitaj();
@@ -327,6 +332,7 @@ public class ViewNarudzba extends javax.swing.JFrame {
         }
         
         ucitajVrijednosti();
+        
         try {
             obrada.update();
             ucitaj();
