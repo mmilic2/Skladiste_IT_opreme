@@ -5,8 +5,18 @@
  */
 package hr.edunova.skladiste.view;
 
+import hr.edunova.skladiste.controller.ObradaNarudzba;
+import hr.edunova.skladiste.model.Narudzba;
 import hr.edunova.skladiste.util.HibernateUtil;
 import hr.edunova.skladiste.util.Pomocno;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import javax.swing.ImageIcon;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -20,8 +30,33 @@ public class Izbornik extends javax.swing.JFrame {
     public Izbornik() {
         initComponents();
         setTitle(Pomocno.getNazivAplikacije());
+        nacrtajGraf();
     }
 
+    private void nacrtajGraf(){
+        DefaultPieDataset pieDataset = new DefaultPieDataset();
+        List<Integer> l = new ArrayList<>();
+        ObradaNarudzba on = new ObradaNarudzba();
+        l.addAll(on.narudzbePoZaposleniku());
+        Integer id;
+        for(Narudzba n: new ObradaNarudzba().getPodaci()){
+            id = n.getZaposlenik().getId();
+            pieDataset.setValue(n.getZaposlenik().getIme(), l.get(id-1));
+        }
+        JFreeChart chart = ChartFactory.createPieChart
+                     ("Broj narudžbi po zaposleniku",   // Title
+                      pieDataset,           // Dataset
+                      true,                  // Show legend  
+                      true,                 //tooltip
+                      new Locale("hr","HR") //locale
+                     );
+        
+        BufferedImage image = chart.createBufferedImage(
+                (int)lblGraf.getSize().getWidth(),
+                (int)lblGraf.getSize().getHeight());
+        lblGraf.setIcon(new ImageIcon(image));
+         }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,6 +66,7 @@ public class Izbornik extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblGraf = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -96,11 +132,11 @@ public class Izbornik extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(lblGraf, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 278, Short.MAX_VALUE)
+            .addComponent(lblGraf, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
         );
 
         pack();
@@ -139,5 +175,6 @@ public class Izbornik extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JLabel lblGraf;
     // End of variables declaration//GEN-END:variables
 }

@@ -88,4 +88,8 @@ public class ObradaNarudzba extends Obrada<Narudzba>{
             return false;
         }
     }
+    
+    public List<Integer> narudzbePoZaposleniku(){
+        return session.createQuery("select count(n.zaposlenik.id) from Narudzba n group by n.zaposlenik.id").list();
+    }
 }
