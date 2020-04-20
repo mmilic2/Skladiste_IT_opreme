@@ -126,6 +126,22 @@ public class Pomocno {
             Logger.getLogger(Pomocno.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        Proizvod p2 = new Proizvod();
+        p2.setAdresa("Negdje u Americi");
+        p2.setDobavljac(d);
+        p2.setEmail("proizvod@email.com");
+        p2.setNaziv("Intel");
+        p2.setCijena(new BigDecimal(2100.00));
+        p2.setKolicina(3);
+        p2.setKontakt("921313");
+        
+        obradaProizvod = new ObradaProizvod(p2);
+        
+        try {
+            obradaProizvod.create(p2);
+        } catch (EdunovaException ex) {
+            Logger.getLogger(Pomocno.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         Narudzba n = new Narudzba();
         n.setDatum(new Date());
@@ -141,6 +157,12 @@ public class Pomocno {
         
         n.getStavke().add(pn);
         
+        pn = new ProizvodNarudzba();
+        pn.setNarudzba(n);
+        pn.setProizvod(p2);
+        pn.setCijena(new BigDecimal(2300));
+        pn.setKolicina(4);
+        n.getStavke().add(pn);
         ObradaNarudzba obradaNarudzba = new ObradaNarudzba(n);
         
         try {

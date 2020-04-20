@@ -24,6 +24,22 @@ public class ObradaNarudzba extends Obrada<Narudzba>{
         super(entitet);
     }
     
+    @Override
+    public Narudzba create() throws EdunovaException{
+        kontrolaCreate();
+        save();
+        nakonSpremanja();
+        return entitet;
+    }
+    
+    private void save() {
+        session.beginTransaction();
+        session.save(entitet);
+         entitet.getStavke().forEach((c)->{
+            session.save(c);
+        });
+        session.getTransaction().commit();
+    }
     
     public void ocistiProizvodeUNarudzbi(){
         session.beginTransaction();

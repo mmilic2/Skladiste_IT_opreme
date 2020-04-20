@@ -55,7 +55,7 @@ public class ViewNarudzba extends javax.swing.JFrame {
     private void ucitajVrijednosti() {
         obrada.getEntitet().setDatum(new Date());
         obrada.getEntitet().setZaposlenik(cmbZaposlenik.getModel().getElementAt(cmbZaposlenik.getSelectedIndex()));
-        obrada.getEntitet().setZaposlenik(cmbZaposlenik.getModel().getElementAt(cmbZaposlenik.getSelectedIndex()));
+        
         try {
             DefaultListModel<ProizvodNarudzba> m = (DefaultListModel<ProizvodNarudzba>)lstProizvodiUNarudzbi.getModel();
             obrada.ocistiProizvodeUNarudzbi();
@@ -111,6 +111,8 @@ public class ViewNarudzba extends javax.swing.JFrame {
         lstProizvodi = new javax.swing.JList<>();
         btnTrazi = new javax.swing.JButton();
         txtUvjet = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtSifra = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -178,6 +180,8 @@ public class ViewNarudzba extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Šifra");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -185,17 +189,20 @@ public class ViewNarudzba extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnPromjeni)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(cmbZaposlenik, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtDatum, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPromjeni)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cmbZaposlenik, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtDatum, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSifra, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -227,7 +234,11 @@ public class ViewNarudzba extends javax.swing.JFrame {
                         .addComponent(txtDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cmbZaposlenik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSifra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnDodaj)
                             .addComponent(btnPromjeni)
@@ -325,7 +336,7 @@ public class ViewNarudzba extends javax.swing.JFrame {
              
             
     
-            
+            obradaProizvod.setEntitet(p);
             ProizvodNarudzba pn = new ProizvodNarudzba();
             pn.setProizvod(p);
             pn.setNarudzba(obrada.getEntitet());
@@ -366,6 +377,7 @@ public class ViewNarudzba extends javax.swing.JFrame {
     private javax.swing.JComboBox<Zaposlenik> cmbZaposlenik;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -373,6 +385,7 @@ public class ViewNarudzba extends javax.swing.JFrame {
     private javax.swing.JList<Proizvod> lstProizvodi;
     private javax.swing.JList<ProizvodNarudzba> lstProizvodiUNarudzbi;
     private javax.swing.JTextField txtDatum;
+    private javax.swing.JTextField txtSifra;
     private javax.swing.JTextField txtUvjet;
     // End of variables declaration//GEN-END:variables
 
@@ -384,3 +397,4 @@ public class ViewNarudzba extends javax.swing.JFrame {
     }
 
 }
+// sifru naci zadnju u bazi order by desc i to plus jedan predloziti korisniku, dodati textfield i gumb na view

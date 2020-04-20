@@ -57,8 +57,13 @@ public class ProizvodNarudzba extends Entitet{
         this.proizvod = proizvod;
     }
 
-    
+    @Override
+    public String toString() {
+        return proizvod.getNaziv();
+    }
 
+    
+    
     
     
     
