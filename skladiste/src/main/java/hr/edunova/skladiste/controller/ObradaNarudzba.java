@@ -75,4 +75,7 @@ public class ObradaNarudzba extends Obrada<Narudzba>{
         
     }
     
+    public Integer Sifra(){
+        return (Integer)session.createQuery("SELECT n.sifra FROM Narudzba n ORDER BY n.sifra DESC").setMaxResults(1).uniqueResult()+1; 
+    }
 }

@@ -5,6 +5,7 @@
  */
 package hr.edunova.skladiste.view;
 
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import hr.edunova.skladiste.controller.ObradaNarudzba;
 import hr.edunova.skladiste.controller.ObradaProizvod;
 import hr.edunova.skladiste.controller.ObradaZaposlenik;
@@ -12,7 +13,9 @@ import hr.edunova.skladiste.model.Narudzba;
 import hr.edunova.skladiste.model.Proizvod;
 import hr.edunova.skladiste.model.ProizvodNarudzba;
 import hr.edunova.skladiste.model.Zaposlenik;
-import hr.edunova.skladiste.util.EdunovaException;
+import hr.edunova.skladiste.util.EdunovaException; 
+import hr.edunova.skladiste.util.Pomocno;
+import java.util.Locale;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
@@ -38,6 +41,9 @@ public class ViewNarudzba extends javax.swing.JFrame {
         ucitajZaposlenike();
         ucitaj();
         obrada.setEntitet(new Narudzba());
+        DatePickerSettings dps = new DatePickerSettings(new Locale("hr","HR"));
+        dps.setFormatForDatesCommonEra("dd.MM.yyyy.");
+        dpDatum.setSettings(dps);
     }
 
     private void ucitajZaposlenike(){
@@ -53,8 +59,12 @@ public class ViewNarudzba extends javax.swing.JFrame {
     }
     
     private void ucitajVrijednosti() {
-        obrada.getEntitet().setDatum(new Date());
+        obrada.getEntitet().setSifra(Integer.parseInt(txtSifra.getText()));
         obrada.getEntitet().setZaposlenik(cmbZaposlenik.getModel().getElementAt(cmbZaposlenik.getSelectedIndex()));
+        if(dpDatum.getDate()!=null){
+            Date d = Pomocno.convertToDateViaInstant(dpDatum.getDate());
+            obrada.getEntitet().setDatum(d);
+        }
         
         try {
             DefaultListModel<ProizvodNarudzba> m = (DefaultListModel<ProizvodNarudzba>)lstProizvodiUNarudzbi.getModel();
@@ -68,7 +78,12 @@ public class ViewNarudzba extends javax.swing.JFrame {
     }
     
     private void postaviVrijednosti(){
-        txtDatum.setText(obrada.getEntitet().getDatum().toString());
+        txtSifra.setText(Pomocno.getFormatCijelogBroja(obrada.getEntitet().getSifra()));
+        if(obrada.getEntitet().getDatum()==null){
+            dpDatum.setDate(null);
+        }else{
+            dpDatum.setDate(Pomocno.convertToLocalDateViaInstant(obrada.getEntitet().getDatum()));
+        }
         postaviZaposlenike();
         postaviProizvode();
     }
@@ -98,8 +113,6 @@ public class ViewNarudzba extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         lstPodaci = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
-        txtDatum = new javax.swing.JTextField();
         cmbZaposlenik = new javax.swing.JComboBox<>();
         btnDodaj = new javax.swing.JButton();
         btnPromjeni = new javax.swing.JButton();
@@ -113,6 +126,9 @@ public class ViewNarudzba extends javax.swing.JFrame {
         txtUvjet = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtSifra = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        dpDatum = new com.github.lgooddatepicker.components.DatePicker();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -122,8 +138,6 @@ public class ViewNarudzba extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(lstPodaci);
-
-        jLabel1.setText("Datum");
 
         btnDodaj.setText("Dodaj");
         btnDodaj.addActionListener(new java.awt.event.ActionListener() {
@@ -182,6 +196,21 @@ public class ViewNarudzba extends javax.swing.JFrame {
 
         jLabel3.setText("Šifra");
 
+        txtSifra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtSifraMouseClicked(evt);
+            }
+        });
+        txtSifra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSifraActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Datum");
+
+        jLabel5.setText("Zaposlenik");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -190,19 +219,19 @@ public class ViewNarudzba extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPromjeni)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(cmbZaposlenik, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtDatum, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(cmbZaposlenik, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSifra, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPromjeni)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtSifra, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                        .addComponent(dpDatum, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -222,30 +251,34 @@ public class ViewNarudzba extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtUvjet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnTrazi))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addGap(10, 10, 10)
+                        .addComponent(dpDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5)
+                        .addGap(14, 14, 14)
                         .addComponent(cmbZaposlenik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSifra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnDodaj)
                             .addComponent(btnPromjeni)
                             .addComponent(btnObrisi))
-                        .addContainerGap(104, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3)))
+                        .addGap(27, 27, 27))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtUvjet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnTrazi))
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)))))
         );
 
         pack();
@@ -368,6 +401,19 @@ public class ViewNarudzba extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lstProizvodiUNarudzbiMouseClicked
 
+    private void txtSifraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtSifraMouseClicked
+        
+        System.out.println(obrada.Sifra());
+         
+        txtSifra.setText(obrada.Sifra().toString());
+      
+      
+    }//GEN-LAST:event_txtSifraMouseClicked
+
+    private void txtSifraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSifraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSifraActionPerformed
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDodaj;
@@ -375,16 +421,17 @@ public class ViewNarudzba extends javax.swing.JFrame {
     private javax.swing.JButton btnPromjeni;
     private javax.swing.JButton btnTrazi;
     private javax.swing.JComboBox<Zaposlenik> cmbZaposlenik;
-    private javax.swing.JLabel jLabel1;
+    private com.github.lgooddatepicker.components.DatePicker dpDatum;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<Narudzba> lstPodaci;
     private javax.swing.JList<Proizvod> lstProizvodi;
     private javax.swing.JList<ProizvodNarudzba> lstProizvodiUNarudzbi;
-    private javax.swing.JTextField txtDatum;
     private javax.swing.JTextField txtSifra;
     private javax.swing.JTextField txtUvjet;
     // End of variables declaration//GEN-END:variables
