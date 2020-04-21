@@ -450,4 +450,3 @@ public class ViewNarudzba extends javax.swing.JFrame {
     }
 
 }
-// sifru naci zadnju u bazi order by desc i to plus jedan predloziti korisniku, dodati textfield i gumb na view

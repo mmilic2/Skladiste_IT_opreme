@@ -32,6 +32,16 @@ public class ObradaNarudzba extends Obrada<Narudzba>{
         nakonSpremanja();
         return entitet;
     }
+
+    @Override
+    public Narudzba update() throws EdunovaException {
+        kontrolaUpdate();
+        save();
+        nakonSpremanja();
+        return entitet;
+    }
+    
+    
     
     private void save() {
         session.beginTransaction();
